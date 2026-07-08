@@ -21,6 +21,7 @@ await contact.submit({ name, email, subject, message });
 
 ## Notes
 - `send(message)` (required) and `store(key, data, contentType)` (optional) are injected functions —
-  no port, no dependency on an email or storage package.
+  no runtime dependency on an email or storage package. `send` receives the email domain's
+  `EmailMessage` (type imported from `@treecombinator/sdk-server-email`, inlined at build).
 - This package owns the wire contract: `ContactMessage`, `Contact` — the client imports them from here.
 - `submit` never throws on its own; it propagates any error from the injected functions. Zero dependencies.

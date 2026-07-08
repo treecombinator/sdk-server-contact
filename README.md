@@ -16,7 +16,7 @@ carries zero runtime dependencies.
 ## Install
 
 ```bash
-npm install github:treecombinator/sdk-server-contact
+givo add @treecombinator/sdk-server-contact
 ```
 
 ## Use
@@ -48,7 +48,10 @@ await contact.submit({
 Config: `{ to, send, from?, store?, storagePrefix? }`.
 
 - `to` — the support inbox that receives every message.
-- `send(message)` — injected delivery; receives `{ to, from?, replyTo?, subject, text }`.
+- `send(message)` — injected delivery; receives an `EmailMessage` (the contract of
+  `@treecombinator/sdk-server-email` — wire `email.send` here). The type is imported from the email
+  domain and inlined into this package's declarations at build, so the shape has one source of
+  truth and consumers install nothing extra.
 - `from` — optional sender address passed through to `send`.
 - `store(key, data, contentType)` — optional injected persistence; receives the generated key, the
   JSON string body and `"application/json"`.
@@ -59,7 +62,8 @@ The wire contract `ContactMessage` (and the `Contact` type) is exported for the 
 ## Notes
 
 - `send` (and optional `store`) are injected functions — the app wires its own email and storage
-  adapters; this package depends on no provider.
+  adapters; this package depends on no provider. `send`'s message shape IS the email domain's
+  `EmailMessage` (types-only dev dependency, zero runtime dependencies).
 - `submit` does not catch: a delivery or persistence failure propagates the error from the injected
   function to the caller.
 - Persisted keys are `"<storagePrefix>/<timestamp>-<uuid>.json"`, so each message lands at a unique

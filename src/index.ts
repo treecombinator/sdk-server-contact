@@ -1,16 +1,16 @@
+import type { EmailMessage } from "@treecombinator/sdk-server-email";
 import type { Contact, ContactMessage } from "./port";
 
 export type { Contact, ContactMessage } from "./port";
 
 export interface ContactConfig {
-  /** Delivers the assembled email — the app wires its email adapter here. */
-  send: (message: {
-    to: string;
-    from?: string;
-    replyTo?: string;
-    subject: string;
-    text: string;
-  }) => Promise<void>;
+  /**
+   * Delivers the assembled email — wire `email.send` from the email domain here (or any
+   * function with its shape). The contract is the email domain's `EmailMessage`, imported
+   * as a TYPE only and inlined into this package's declarations at build: one source of
+   * truth for the shape, still zero runtime dependencies.
+   */
+  send: (message: EmailMessage) => Promise<void>;
   /** Support inbox that receives the messages. */
   to: string;
   from?: string;
